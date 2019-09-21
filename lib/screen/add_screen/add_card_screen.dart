@@ -47,9 +47,21 @@ class _AddCardScreenState extends State<AddCardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 1.0,
         title: isEdit ? Text('Edit Card') : Text('Add Card'),
         actions: <Widget>[
-          IconButton(onPressed: _saveCard, icon: Icon(Icons.save)),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: RaisedButton.icon(
+              icon: Icon(Icons.done),
+              label: Text('Save'),
+              color: Colors.green[300],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              onPressed: _saveCard,
+            ),
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -59,23 +71,8 @@ class _AddCardScreenState extends State<AddCardScreen> {
             padding: const EdgeInsets.all(12.0),
             child: Column(
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    CardImagePicker(
-                      imagePath: cardModel.profileImagePath,
-                      pickedImage: _pickedProfileImage,
-                      onPickImage: _pickProfileImage,
-                      defaultAssetPath: 'assets/person.jpeg',
-                    ),
-                    CardImagePicker(
-                      imagePath: cardModel.backgroundImagePath,
-                      pickedImage: _pickedBackgroundImage,
-                      onPickImage: _pickBackgroundImage,
-                      defaultAssetPath: 'assets/logo.jpg',
-                    ),
-                  ],
-                ),
+                _buildImagesPicker(),
+                SizedBox(height: 16.0,),
                 TextFormfieldWithPadding(
                   initialValue: cardModel.label,
                   label: 'Card Name',
@@ -116,6 +113,70 @@ class _AddCardScreenState extends State<AddCardScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildImagesPicker() {
+    return Wrap(
+      spacing: 12.0,
+      children: <Widget>[
+        Container(
+          padding: const EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.blueGrey[100]),
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Text(
+                  'Profile:',
+                  style: TextStyle(
+                    color: Colors.blueGrey,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              CardImagePicker(
+                imagePath: cardModel.profileImagePath,
+                pickedImage: _pickedProfileImage,
+                onPickImage: _pickProfileImage,
+                defaultAssetPath: 'assets/person.jpeg',
+              ),
+            ],
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.blueGrey[100]),
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Text(
+                  'Background:',
+                  style: TextStyle(
+                    color: Colors.blueGrey,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              CardImagePicker(
+                imagePath: cardModel.backgroundImagePath,
+                pickedImage: _pickedBackgroundImage,
+                onPickImage: _pickBackgroundImage,
+                defaultAssetPath: 'assets/logo.jpg',
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
