@@ -1,10 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:heremycard/components/text_formfield_with_padding.dart';
 import 'package:heremycard/model/card_model.dart';
 import 'package:heremycard/service/card_service.dart';
+import 'package:heremycard/utils/mc_ui_utils.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'card_image_picker.dart';
 import 'form_setters_mixin.dart';
 import 'form_validators_mixin.dart';
 
@@ -21,7 +24,8 @@ class AddCardScreen extends StatefulWidget
 class _AddCardScreenState extends State<AddCardScreen> {
   _AddCardScreenState(this.cardModel);
 
-  File _pickedImage;
+  File _pickedProfileImage;
+  File _pickedBackgroundImage;
 
   final cardModel;
   final form = GlobalKey<FormState>();
@@ -34,6 +38,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
     super.initState();
 
     if (isEdit) {
+      widget.setProfileImagePath(cardModel.profileImagePath);
       widget.setId(cardModel.id);
     }
   }
@@ -54,33 +59,58 @@ class _AddCardScreenState extends State<AddCardScreen> {
             padding: const EdgeInsets.all(12.0),
             child: Column(
               children: <Widget>[
-                CardProfileImagePicker(cardModel.profileImagePath, _pickedImage, _pickImage),
-                _buildFormFieldWithPadding(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    CardImagePicker(
+                      imagePath: cardModel.profileImagePath,
+                      pickedImage: _pickedProfileImage,
+                      onPickImage: _pickProfileImage,
+                      defaultAssetPath: 'assets/person.jpeg',
+                    ),
+                    CardImagePicker(
+                      imagePath: cardModel.backgroundImagePath,
+                      pickedImage: _pickedBackgroundImage,
+                      onPickImage: _pickBackgroundImage,
+                      defaultAssetPath: 'assets/logo.jpg',
+                    ),
+                  ],
+                ),
+                TextFormfieldWithPadding(
                   initialValue: cardModel.label,
-                    label: 'Card Name',
-                    setter: widget.labelSetter,
-                    validator: widget.labelValidator),
-                _buildFormFieldWithPadding(
-                    initialValue: cardModel.name,
-                    label: 'Your Name',
-                    setter: widget.nameSetter,
-                    validator: widget.nameValidator),
-                _buildFormFieldWithPadding(
-                    initialValue: cardModel.profession,
-                    label: 'Profession',
-                    setter: widget.professionSetter,
-                    validator: widget.professionValidator),
-                _buildFormFieldWithPadding(
-                    initialValue: cardModel.phone,
-                    label: 'Phone', setter: widget.phoneSetter, isText: false),
-                _buildFormFieldWithPadding(
-                    initialValue: cardModel.email,
-                    label: 'E-mail', setter: widget.emailSetter),
-                _buildFormFieldWithPadding(
-                    initialValue: cardModel.whatsapp,
-                    label: 'WhatsApp',
-                    setter: widget.whatsappSetter,
-                    isText: false),
+                  label: 'Card Name',
+                  setter: widget.labelSetter,
+                  validator: widget.labelValidator,
+                ),
+                TextFormfieldWithPadding(
+                  initialValue: cardModel.name,
+                  label: 'Your Name',
+                  setter: widget.nameSetter,
+                  validator: widget.nameValidator,
+                ),
+                TextFormfieldWithPadding(
+                  initialValue: cardModel.profession,
+                  label: 'Profession',
+                  setter: widget.professionSetter,
+                  validator: widget.professionValidator,
+                ),
+                TextFormfieldWithPadding(
+                  initialValue: cardModel.phone,
+                  label: 'Phone',
+                  setter: widget.phoneSetter,
+                  inputType: TextInputType.phone,
+                ),
+                TextFormfieldWithPadding(
+                  initialValue: cardModel.email,
+                  label: 'E-mail',
+                  setter: widget.emailSetter,
+                ),
+                TextFormfieldWithPadding(
+                  initialValue: cardModel.whatsapp,
+                  label: 'WhatsApp',
+                  setter: widget.whatsappSetter,
+                  inputType: TextInputType.phone,
+                ),
               ],
             ),
           ),
@@ -89,33 +119,22 @@ class _AddCardScreenState extends State<AddCardScreen> {
     );
   }
 
-  Widget _buildFormFieldWithPadding(
-      {String initialValue = '',
-      String label,
-      FormFieldSetter<String> setter,
-      FormFieldValidator<String> validator,
-      bool isText = false}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
-      child: TextFormField(
-        decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: label,
-        ),
-        initialValue: initialValue,
-        validator: validator,
-        onSaved: setter,
-        keyboardType: isText ? TextInputType.text : TextInputType.phone,
-      ),
-    );
-  }
-
-  void _pickImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+  void _pickProfileImage(ImageSource source) async {
+    final image = await ImagePicker.pickImage(source: source);
     if (image != null) {
       setState(() {
-        _pickedImage = image;
-        widget.setProfileImagePath(_pickedImage.path);
+        _pickedProfileImage = image;
+        widget.setProfileImagePath(_pickedProfileImage.path);
+      });
+    }
+  }
+
+  void _pickBackgroundImage(ImageSource source) async {
+    final image = await ImagePicker.pickImage(source: source);
+    if (image != null) {
+      setState(() {
+        _pickedBackgroundImage = image;
+        widget.setBackgroundImagePath(_pickedBackgroundImage.path);
       });
     }
   }
@@ -129,37 +148,8 @@ class _AddCardScreenState extends State<AddCardScreen> {
       } else {
         await _service.save(FormSettersMixin.cardModel);
       }
+      MCUiUtils.showToast('Card Saved!');
+      Navigator.pop(context);
     }
-  }
-}
-
-class CardProfileImagePicker extends StatelessWidget {
-
-  CardProfileImagePicker(this.profileImagePath, this._pickedImage, this.onPickImage);
-
-  final String profileImagePath;
-  final File _pickedImage;
-  final Function onPickImage;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPickImage,
-      child: CircleAvatar(
-        radius: 90.0,
-        backgroundImage: _buildImage(),
-        backgroundColor: Colors.transparent,
-      ),
-    );
-  }
-
-  ImageProvider _buildImage() {
-    if (_pickedImage == null && profileImagePath == null) {
-      return AssetImage('assets/person.jpeg');
-    }
-    if (_pickedImage != null) {
-      return FileImage(_pickedImage);
-    }
-    return FileImage(File(profileImagePath));
   }
 }

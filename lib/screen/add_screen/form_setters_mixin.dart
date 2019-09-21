@@ -25,4 +25,5 @@ mixin FormSettersMixin {
 
   void setId(int id) => cardModel.id = id;
   void setProfileImagePath(String profileImage) => cardModel.profileImagePath = profileImage;
+  void setBackgroundImagePath(String backgroundImage) => cardModel.backgroundImagePath = backgroundImage;
 }

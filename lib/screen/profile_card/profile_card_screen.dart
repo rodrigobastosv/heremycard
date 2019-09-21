@@ -4,8 +4,9 @@ import 'dart:ui';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:heremycard/model/card_model.dart';
-import 'package:heremycard/utils/MCUtils.dart';
+import 'package:heremycard/utils/mc_utils.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -24,6 +25,26 @@ class _ProfileCardScreenState extends State<ProfileCardScreen> {
   final CardModel card;
 
   File _file;
+
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+    ]);
+  }
+
+  @override
+  dispose() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,9 +85,8 @@ class _ProfileCardScreenState extends State<ProfileCardScreen> {
         decoration: BoxDecoration(
           color: Colors.grey,
           image: DecorationImage(
-              image: AssetImage(
-                'assets/logo.jpg',
-              ),
+              image: MCUtils.getImageProviderByPathOrDefault(
+                  card.backgroundImagePath, 'assets/logo.jpg'),
               fit: BoxFit.cover),
         ),
         child: SafeArea(
@@ -84,8 +104,10 @@ class _ProfileCardScreenState extends State<ProfileCardScreen> {
                         tag: card.id,
                         child: ClipRRect(
                           borderRadius: new BorderRadius.circular(28.0),
-                          child: MCUtils.getProfileImageByPathOrDefault(
-                              card.profileImagePath),
+                          child: MCUtils.getImageByPathOrDefault(
+                            card.profileImagePath,
+                            'assets/person.jpeg',
+                          ),
                         ),
                       ),
                     ),
