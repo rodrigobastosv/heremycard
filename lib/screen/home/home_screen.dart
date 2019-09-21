@@ -1,3 +1,4 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:heremycard/model/card_model.dart';
 import 'package:heremycard/screen/add_screen/add_card_screen.dart';
@@ -16,18 +17,38 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Here your cards'),
-          centerTitle: true,
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _navigateToAddCard,
-          child: Icon(Icons.add),
-        ),
-        body: Container(
-          child: FutureBuilder<List<CardModel>>(
-            future: _service.getAll(),
-            builder: (context, snapshot) {
+      appBar: AppBar(
+        elevation: 1.0,
+        title: Text('Here your cards'),
+        actions: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: RaisedButton.icon(
+              icon: Icon(Icons.add),
+              label: Text('Create'),
+              color: Colors.blue[200],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              onPressed: _navigateToAddCard,
+            ),
+          ),
+        ],
+      ),
+      body: _buildCards(),
+    );
+  }
+
+  Widget _buildCards() {
+    return Container(
+      child: FutureBuilder<List<CardModel>>(
+        future: _service.getAll(),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+            case ConnectionState.waiting:
+              return Center(child: CircularProgressIndicator());
+            case ConnectionState.done:
               if (snapshot.hasData) {
                 List<CardModel> cards = snapshot.data;
                 return ListView.separated(
@@ -35,11 +56,46 @@ class _HomeScreenState extends State<HomeScreen> {
                   separatorBuilder: (context, index) => Divider(),
                   itemCount: cards.length,
                 );
+              } else {
+                return _buildAddCards();
               }
-              return CircularProgressIndicator();
-            },
+              break;
+            default:
+              return _buildAddCards();
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildAddCards() {
+    return Center(
+      child: Container(
+        height: 250.0,
+        width: 250.0,
+        child: DottedBorder(
+          borderType: BorderType.RRect,
+          strokeWidth: 2,
+          dashPattern: [6],
+          color: Colors.blueGrey,
+          radius: Radius.circular(20.0),
+          child: FlatButton(
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            textColor: Colors.blueGrey,
+            child: Container(
+              height: 250.0,
+              alignment: Alignment.center,
+              child: Text(
+                'Tap here to create your first card!',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 19.0),
+              ),
+            ),
+            onPressed: _navigateToAddCard,
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _buildCardItem(CardModel card) {
@@ -48,8 +104,9 @@ class _HomeScreenState extends State<HomeScreen> {
       leading: Hero(
         tag: card.id,
         child: ClipRRect(
-          borderRadius: new BorderRadius.circular(28.0),
-          child: MCUtils.getImageByPathOrDefault(card.profileImagePath, 'assets/person.jpeg'),
+          borderRadius: BorderRadius.circular(28.0),
+          child: MCUtils.getImageByPathOrDefault(
+              card.profileImagePath, 'assets/person.jpeg'),
         ),
       ),
       trailing: IconButton(
