@@ -16,4 +16,8 @@ class CardService {
   Future<int> update(CardModel cardModel) async {
     return _dao.update(cardModel);
   }
+
+  Future<int> delete(CardModel cardModel) async {
+    return _dao.delete(cardModel);
+  }
 }

@@ -13,6 +13,20 @@ class MCUiUtils {
     );
   }
 
+  static void showSnackBar(GlobalKey<ScaffoldState> key, String message, [Function undoAction]) {
+    key.currentState
+      ..removeCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(message),
+          action: undoAction != null ? SnackBarAction(
+            label: 'UNDO',
+            onPressed: undoAction,
+          ) : null,
+        ),
+      );
+  }
+
   static void showSimpleDialog(
       {BuildContext context, Widget title, List<Widget> children}) {
     showDialog(

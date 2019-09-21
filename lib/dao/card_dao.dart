@@ -18,6 +18,12 @@ class CardDAO {
     return await db.insert(CARD_TABLE, CardModel.toJson(cardModel));
   }
 
+  Future<int> delete(CardModel cardModel) async {
+    Database db = await DB().db;
+
+    return await db.delete(CARD_TABLE, where: 'id = ?', whereArgs: [cardModel.id]);
+  }
+
   Future<int> update(CardModel cardModel) async {
     Database db = await DB().db;
 
