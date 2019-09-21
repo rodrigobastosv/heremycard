@@ -4,6 +4,7 @@ import 'package:heremycard/model/card_model.dart';
 import 'package:heremycard/screen/add_screen/add_card_screen.dart';
 import 'package:heremycard/screen/profile_card/profile_card_screen.dart';
 import 'package:heremycard/service/card_service.dart';
+import 'package:heremycard/utils/mc_ui_utils.dart';
 import 'package:heremycard/utils/mc_utils.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -12,11 +13,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  GlobalKey<ScaffoldState> _key = GlobalKey();
   final _service = CardService();
+  List<CardModel> cards;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _key,
       appBar: AppBar(
         elevation: 1.0,
         title: Text('Here your cards'),
@@ -50,9 +54,9 @@ class _HomeScreenState extends State<HomeScreen> {
               return Center(child: CircularProgressIndicator());
             case ConnectionState.done:
               if (snapshot.hasData) {
-                List<CardModel> cards = snapshot.data;
+                cards = snapshot.data;
                 return ListView.separated(
-                  itemBuilder: (context, index) => _buildCardItem(cards[index]),
+                  itemBuilder: (context, index) => _buildCardItem(index),
                   separatorBuilder: (context, index) => Divider(),
                   itemCount: cards.length,
                 );
@@ -98,23 +102,58 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildCardItem(CardModel card) {
-    return ListTile(
-      onTap: () => _navigateToEditCard(card),
-      leading: Hero(
-        tag: card.id,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(28.0),
-          child: MCUtils.getImageByPathOrDefault(
-              card.profileImagePath, 'assets/person.jpeg'),
+  Widget _buildCardItem(int index) {
+    CardModel card = cards[index];
+    return Dismissible(
+      key: Key(card.id.toString()),
+      onDismissed: (direction) async {
+        await _service.delete(card);
+        setState(() => cards.remove(card));
+        _showDeletedSnackBar(index, card);
+      },
+      background: Container(
+        color: Colors.red,
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Icon(Icons.delete),
+              Icon(Icons.delete),
+            ],
+          ),
         ),
       ),
-      trailing: IconButton(
-        icon: Icon(Icons.aspect_ratio),
-        onPressed: () => _navigateToProfileCard(card),
+      child: ListTile(
+        onTap: () => _navigateToEditCard(card),
+        leading: Hero(
+          tag: card.id,
+          child: ClipRRect(
+            borderRadius: new BorderRadius.circular(28.0),
+            child: MCUtils.getImageByPathOrDefault(
+                card.profileImagePath, 'assets/person.jpeg'),
+          ),
+        ),
+        trailing: IconButton(
+          icon: Icon(Icons.aspect_ratio),
+          onPressed: () => _navigateToProfileCard(card),
+        ),
+        title: Text(card.label),
+        subtitle: Text(card.profession),
       ),
-      title: Text(card.label),
-      subtitle: Text(card.profession),
+    );
+  }
+
+  void _showDeletedSnackBar(int index, CardModel card) async {
+    MCUiUtils.showSnackBar(
+      _key,
+      'Card Deleted!',
+      () async {
+        _service.save(card);
+        setState(
+          () => cards.insert(index, card),
+        );
+      },
     );
   }
 
