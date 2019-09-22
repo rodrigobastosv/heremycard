@@ -129,6 +129,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
                   initialValue: cardModel.email,
                   label: 'E-mail',
                   setter: widget.emailSetter,
+                  validator: widget.emailValidator,
                   focusNode: emailFN,
                   nextFocusNode: whatsappFN,
                 ),
