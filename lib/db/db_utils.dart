@@ -6,6 +6,7 @@ const PROFESSION = 'profession';
 const PROFILE_IMAGE_PATH = 'profile_image_path';
 const BACKGROUND_IMAGE_PATH = 'background_image_path';
 const FONT_COLOR = 'font_color';
+const FONT_SIZE = 'font_size';
 const PHONE = 'phone';
 const EMAIL = 'email';
 const WHATSAPP = 'whatsapp';

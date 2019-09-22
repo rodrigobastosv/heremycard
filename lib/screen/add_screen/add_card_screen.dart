@@ -30,7 +30,8 @@ class _AddCardScreenState extends State<AddCardScreen> {
   final cardModel;
   final form = GlobalKey<FormState>();
   final _service = CardService();
-  int pickedFontColor;
+  int pickedFontColor = 0xFF000000;
+  int pickedFontSize = 18;
 
   bool get isEdit => cardModel.id != null;
 
@@ -42,10 +43,10 @@ class _AddCardScreenState extends State<AddCardScreen> {
       widget.setId(cardModel.id);
       widget.setProfileImagePath(cardModel.profileImagePath);
       pickedFontColor = cardModel.fontColor;
-    } else {
-      pickedFontColor = 0xFF000000;
+      pickedFontSize = cardModel.fontSize;
     }
     widget.setFontColor(pickedFontColor);
+    widget.setFontSize(pickedFontSize);
   }
 
   @override
@@ -80,7 +81,13 @@ class _AddCardScreenState extends State<AddCardScreen> {
                 SizedBox(
                   height: 16.0,
                 ),
-                _buildColorPicker(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    _buildColorPicker(),
+                    _buildFontSizePicker(),
+                  ],
+                ),
                 TextFormfieldWithPadding(
                   initialValue: cardModel.label,
                   label: 'Card Name',
@@ -158,6 +165,47 @@ class _AddCardScreenState extends State<AddCardScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildFontSizePicker() {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.blueGrey[100]),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Text(
+                'Font Size: ',
+                style: TextStyle(
+                  color: Colors.blueGrey,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Text(
+                pickedFontSize.toString(),
+                style: TextStyle(
+                  color: Colors.blueGrey,
+                  fontSize: pickedFontSize.toDouble(),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          Slider(
+            onChanged: (value) {
+              setState(() => pickedFontSize = value.toInt());
+            },
+            value: pickedFontSize.toDouble(),
+            min: 14,
+            max: 32,
+          ),
+        ],
       ),
     );
   }
@@ -251,6 +299,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
     if (formState.validate()) {
       formState.save();
       widget.setFontColor(pickedFontColor);
+      widget.setFontSize(pickedFontSize);
       if (isEdit) {
         await _service.update(FormSettersMixin.cardModel);
       } else {

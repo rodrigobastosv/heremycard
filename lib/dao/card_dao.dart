@@ -37,6 +37,7 @@ class CardDAO {
           $PROFILE_IMAGE_PATH = ?,
           $BACKGROUND_IMAGE_PATH = ?,
           $FONT_COLOR = ?,
+          $FONT_SIZE = ?,
           $PHONE = ?,
           $EMAIL = ?,
           $WHATSAPP = ?
@@ -49,6 +50,7 @@ class CardDAO {
           cardModel.profileImagePath,
           cardModel.backgroundImagePath,
           cardModel.fontColor,
+          cardModel.fontSize,
           cardModel.phone,
           cardModel.email,
           cardModel.whatsapp,

@@ -3,6 +3,7 @@ import 'package:heremycard/db/db_utils.dart';
 class CardModel {
   int id;
   int fontColor;
+  int fontSize;
   String label;
   String name;
   String profession;
@@ -23,6 +24,7 @@ class CardModel {
       ..profileImagePath = json[PROFILE_IMAGE_PATH]
       ..backgroundImagePath = json[BACKGROUND_IMAGE_PATH]
       ..fontColor = json[FONT_COLOR]
+      ..fontSize = json[FONT_SIZE]
       ..phone = json[PHONE]
       ..email = json[EMAIL]
       ..whatsapp = json[WHATSAPP];
@@ -37,6 +39,7 @@ class CardModel {
       PROFILE_IMAGE_PATH: instance.profileImagePath,
       BACKGROUND_IMAGE_PATH: instance.backgroundImagePath,
       FONT_COLOR: instance.fontColor,
+      FONT_SIZE: instance.fontSize,
       PHONE: instance.phone,
       EMAIL: instance.email,
       WHATSAPP: instance.whatsapp

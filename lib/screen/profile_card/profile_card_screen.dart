@@ -26,6 +26,7 @@ class _ProfileCardScreenState extends State<ProfileCardScreen> {
   final CardModel card;
 
   int get fontColor => card.fontColor;
+  int get fontSize => card.fontSize;
 
   File _file;
 
@@ -127,7 +128,7 @@ class _ProfileCardScreenState extends State<ProfileCardScreen> {
                         Text(
                           card.name,
                           style: TextStyle(
-                            fontSize: 22.0,
+                            fontSize: fontSize.toDouble(),
                             fontWeight: FontWeight.bold,
                             color: Color(fontColor),
                           ),
@@ -136,7 +137,7 @@ class _ProfileCardScreenState extends State<ProfileCardScreen> {
                         Text(
                           card.profession,
                           style: TextStyle(
-                            fontSize: 16.0,
+                            fontSize: fontSize.toDouble() - 6.0,
                             fontWeight: FontWeight.w500,
                             color: Color(fontColor),
                           ),
@@ -152,9 +153,9 @@ class _ProfileCardScreenState extends State<ProfileCardScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     _buildInfoRow(
-                        Icons.email, card.email, fontColor, Colors.red[800]),
-                    _buildInfoRow(Icons.phone, card.phone, fontColor),
-                    _buildInfoRow(MdiIcons.whatsapp, card.whatsapp, fontColor,
+                        Icons.email, card.email, Colors.red[800]),
+                    _buildInfoRow(Icons.phone, card.phone),
+                    _buildInfoRow(MdiIcons.whatsapp, card.whatsapp,
                         Colors.green),
                   ],
                 ),
@@ -170,30 +171,31 @@ class _ProfileCardScreenState extends State<ProfileCardScreen> {
       ),
     );
   }
-}
 
-Widget _buildInfoRow(IconData icon, String text, int fontColor, [Color color]) {
-  if (text == null || text.isEmpty) {
-    return Container();
-  }
-  return Padding(
-    padding: const EdgeInsets.all(10.0),
-    child: Row(
-      children: <Widget>[
-        CircleAvatar(
-          backgroundColor: color,
-          child: Icon(icon, color: Colors.white),
-        ),
-        SizedBox(
-          width: 8.0,
-        ),
-        Text(
-          text,
-          style: TextStyle(
-            color: Color(fontColor),
+  Widget _buildInfoRow(IconData icon, String text, [Color color]) {
+    if (text == null || text.isEmpty) {
+      return Container();
+    }
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Row(
+        children: <Widget>[
+          CircleAvatar(
+            backgroundColor: color,
+            child: Icon(icon, color: Colors.white),
           ),
-        ),
-      ],
-    ),
-  );
+          SizedBox(
+            width: 8.0,
+          ),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: fontSize.toDouble(),
+              color: Color(fontColor),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
