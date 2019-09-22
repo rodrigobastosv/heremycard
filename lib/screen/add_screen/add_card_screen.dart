@@ -30,6 +30,12 @@ class _AddCardScreenState extends State<AddCardScreen> {
   final cardModel;
   final form = GlobalKey<FormState>();
   final _service = CardService();
+  final nameFN = FocusNode();
+  final professionFN = FocusNode();
+  final phoneFN = FocusNode();
+  final emailFN = FocusNode();
+  final whatsappFN = FocusNode();
+
   int pickedFontColor = 0xFF000000;
   int pickedFontSize = 18;
 
@@ -93,35 +99,47 @@ class _AddCardScreenState extends State<AddCardScreen> {
                   label: 'Card Name',
                   setter: widget.labelSetter,
                   validator: widget.labelValidator,
+                  nextFocusNode: nameFN
                 ),
                 TextFormfieldWithPadding(
                   initialValue: cardModel.name,
                   label: 'Your Name',
                   setter: widget.nameSetter,
                   validator: widget.nameValidator,
+                  focusNode: nameFN,
+                  nextFocusNode: professionFN,
                 ),
                 TextFormfieldWithPadding(
                   initialValue: cardModel.profession,
                   label: 'Profession',
                   setter: widget.professionSetter,
                   validator: widget.professionValidator,
+                  focusNode: professionFN,
+                  nextFocusNode: phoneFN,
                 ),
                 TextFormfieldWithPadding(
                   initialValue: cardModel.phone,
                   label: 'Phone',
                   setter: widget.phoneSetter,
                   inputType: TextInputType.phone,
+                  focusNode: phoneFN,
+                  nextFocusNode: emailFN,
                 ),
                 TextFormfieldWithPadding(
                   initialValue: cardModel.email,
                   label: 'E-mail',
                   setter: widget.emailSetter,
+                  focusNode: emailFN,
+                  nextFocusNode: whatsappFN,
                 ),
                 TextFormfieldWithPadding(
                   initialValue: cardModel.whatsapp,
                   label: 'WhatsApp',
                   setter: widget.whatsappSetter,
                   inputType: TextInputType.phone,
+                  focusNode: whatsappFN,
+                  textInputAction: TextInputAction.done,
+                  onFieldSubmitted: _saveCard,
                 ),
               ],
             ),
