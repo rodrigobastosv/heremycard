@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class MCUiUtils {
@@ -13,16 +14,19 @@ class MCUiUtils {
     );
   }
 
-  static void showSnackBar(GlobalKey<ScaffoldState> key, String message, [Function undoAction]) {
+  static void showSnackBar(GlobalKey<ScaffoldState> key, String message,
+      [Function undoAction]) {
     key.currentState
       ..removeCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
           content: Text(message),
-          action: undoAction != null ? SnackBarAction(
-            label: 'UNDO',
-            onPressed: undoAction,
-          ) : null,
+          action: undoAction != null
+              ? SnackBarAction(
+                  label: 'UNDO',
+                  onPressed: undoAction,
+                )
+              : null,
         ),
       );
   }
@@ -34,6 +38,33 @@ class MCUiUtils {
       builder: (context) => SimpleDialog(
         title: title,
         children: children,
+      ),
+    );
+  }
+
+  static void showColorPicker(
+      {BuildContext context, Color pickedColor, Function onPickColor}) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: SingleChildScrollView(
+          child: ColorPicker(
+            pickerColor: pickedColor,
+            onColorChanged: (color) {
+              onPickColor(color);
+            },
+            enableLabel: true,
+            pickerAreaHeightPercent: 0.8,
+          ),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: const Text('PICK'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
       ),
     );
   }

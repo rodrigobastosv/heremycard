@@ -31,15 +31,16 @@ class CardDAO {
         '''
         UPDATE $CARD_TABLE
         SET 
-          label = ?,
-          name = ?,
-          profession = ?,
-          profileImagePath = ?,
-          backgroundImagePath = ?,
-          phone = ?,
-          email = ?,
-          whatsapp = ?
-        WHERE id = ?
+          $LABEL = ?,
+          $NAME = ?,
+          $PROFESSION = ?,
+          $PROFILE_IMAGE_PATH = ?,
+          $BACKGROUND_IMAGE_PATH = ?,
+          $FONT_COLOR = ?,
+          $PHONE = ?,
+          $EMAIL = ?,
+          $WHATSAPP = ?
+        WHERE $ID = ?
       ''',
         [
           cardModel.label,
@@ -47,6 +48,7 @@ class CardDAO {
           cardModel.profession,
           cardModel.profileImagePath,
           cardModel.backgroundImagePath,
+          cardModel.fontColor,
           cardModel.phone,
           cardModel.email,
           cardModel.whatsapp,

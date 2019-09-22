@@ -33,6 +33,7 @@ class DB {
       '''
         CREATE TABLE $CARD_TABLE(
           $ID INTEGER PRIMARY KEY,
+          $FONT_COLOR INTEGER,
           $LABEL TEXT,
           $NAME TEXT,
           $PROFESSION TEXT,

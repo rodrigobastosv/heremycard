@@ -55,15 +55,16 @@ class _HomeScreenState extends State<HomeScreen> {
             case ConnectionState.done:
               if (snapshot.hasData) {
                 cards = snapshot.data;
+                if (cards.isEmpty) {
+                  return _buildAddCards();
+                }
                 return ListView.separated(
                   itemBuilder: (context, index) => _buildCardItem(index),
                   separatorBuilder: (context, index) => Divider(),
                   itemCount: cards.length,
                 );
-              } else {
-                return _buildAddCards();
               }
-              break;
+              return _buildAddCards();
             default:
               return _buildAddCards();
           }

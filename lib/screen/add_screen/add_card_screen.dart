@@ -30,6 +30,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
   final cardModel;
   final form = GlobalKey<FormState>();
   final _service = CardService();
+  int pickedFontColor;
 
   bool get isEdit => cardModel.id != null;
 
@@ -38,9 +39,13 @@ class _AddCardScreenState extends State<AddCardScreen> {
     super.initState();
 
     if (isEdit) {
-      widget.setProfileImagePath(cardModel.profileImagePath);
       widget.setId(cardModel.id);
+      widget.setProfileImagePath(cardModel.profileImagePath);
+      pickedFontColor = cardModel.fontColor;
+    } else {
+      pickedFontColor = 0xFF000000;
     }
+    widget.setFontColor(pickedFontColor);
   }
 
   @override
@@ -72,7 +77,10 @@ class _AddCardScreenState extends State<AddCardScreen> {
             child: Column(
               children: <Widget>[
                 _buildImagesPicker(),
-                SizedBox(height: 16.0,),
+                SizedBox(
+                  height: 16.0,
+                ),
+                _buildColorPicker(),
                 TextFormfieldWithPadding(
                   initialValue: cardModel.label,
                   label: 'Card Name',
@@ -111,6 +119,44 @@ class _AddCardScreenState extends State<AddCardScreen> {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildColorPicker() {
+    return GestureDetector(
+      onTap: () {
+        MCUiUtils.showColorPicker(
+          context: context,
+          pickedColor: Color(pickedFontColor),
+          onPickColor: (Color color) {
+            setState(() => pickedFontColor = color.value);
+          },
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.blueGrey[100]),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Column(
+          children: <Widget>[
+            Text(
+              'Font Color:',
+              style: TextStyle(
+                color: Colors.blueGrey,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(height: 8.0),
+            CircleAvatar(
+              radius: 20.0,
+              backgroundColor: Color(pickedFontColor),
+            ),
+          ],
         ),
       ),
     );
@@ -204,6 +250,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
     FormState formState = form.currentState;
     if (formState.validate()) {
       formState.save();
+      widget.setFontColor(pickedFontColor);
       if (isEdit) {
         await _service.update(FormSettersMixin.cardModel);
       } else {

@@ -22,7 +22,10 @@ class ProfileCardScreen extends StatefulWidget {
 class _ProfileCardScreenState extends State<ProfileCardScreen> {
   _ProfileCardScreenState(this.card);
 
+  final GlobalKey globalKey = GlobalKey();
   final CardModel card;
+
+  int get fontColor => card.fontColor;
 
   File _file;
 
@@ -48,7 +51,6 @@ class _ProfileCardScreenState extends State<ProfileCardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    GlobalKey globalKey = GlobalKey();
     return Scaffold(
       body: RepaintBoundary(
         key: globalKey,
@@ -61,13 +63,14 @@ class _ProfileCardScreenState extends State<ProfileCardScreen> {
         onPressed: () async {
           RenderRepaintBoundary boundary =
               globalKey.currentContext.findRenderObject();
-          var image = await boundary.toImage();
-          var byteData = await image.toByteData(format: ImageByteFormat.png);
-          var pngBytes = byteData.buffer.asUint8List();
+          final image = await boundary.toImage();
+          final byteData = await image.toByteData(format: ImageByteFormat.png);
+          final pngBytes = byteData.buffer.asUint8List();
           final directory = (await getApplicationDocumentsDirectory()).path;
 
-          await Share.file('esys image', 'esys.png', pngBytes, 'image/png',
-              text: 'My optional text.');
+          await Share.file(
+              'Card Image', 'here_my_card.png', pngBytes, 'image/png',
+              text: 'Here\'s my card.');
 
           setState(() {
             _file = new File('$directory/screenshot.png');
@@ -126,6 +129,7 @@ class _ProfileCardScreenState extends State<ProfileCardScreen> {
                           style: TextStyle(
                             fontSize: 22.0,
                             fontWeight: FontWeight.bold,
+                            color: Color(fontColor),
                           ),
                         ),
                         SizedBox(height: 4.0),
@@ -134,6 +138,7 @@ class _ProfileCardScreenState extends State<ProfileCardScreen> {
                           style: TextStyle(
                             fontSize: 16.0,
                             fontWeight: FontWeight.w500,
+                            color: Color(fontColor),
                           ),
                         ),
                       ],
@@ -146,10 +151,11 @@ class _ProfileCardScreenState extends State<ProfileCardScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    _buildInfoRow(Icons.email, card.email, Colors.red[800]),
-                    _buildInfoRow(Icons.phone, card.phone),
                     _buildInfoRow(
-                        MdiIcons.whatsapp, card.whatsapp, Colors.green),
+                        Icons.email, card.email, fontColor, Colors.red[800]),
+                    _buildInfoRow(Icons.phone, card.phone, fontColor),
+                    _buildInfoRow(MdiIcons.whatsapp, card.whatsapp, fontColor,
+                        Colors.green),
                   ],
                 ),
               ),
@@ -166,7 +172,10 @@ class _ProfileCardScreenState extends State<ProfileCardScreen> {
   }
 }
 
-Widget _buildInfoRow(IconData icon, String text, [Color color]) {
+Widget _buildInfoRow(IconData icon, String text, int fontColor, [Color color]) {
+  if (text == null || text.isEmpty) {
+    return Container();
+  }
   return Padding(
     padding: const EdgeInsets.all(10.0),
     child: Row(
@@ -178,7 +187,12 @@ Widget _buildInfoRow(IconData icon, String text, [Color color]) {
         SizedBox(
           width: 8.0,
         ),
-        Text(text)
+        Text(
+          text,
+          style: TextStyle(
+            color: Color(fontColor),
+          ),
+        ),
       ],
     ),
   );
