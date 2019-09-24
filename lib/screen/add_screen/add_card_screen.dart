@@ -6,10 +6,13 @@ import 'package:heremycard/model/card_model.dart';
 import 'package:heremycard/service/card_service.dart';
 import 'package:heremycard/utils/mc_ui_utils.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 import 'card_image_picker.dart';
 import 'form_setters_mixin.dart';
 import 'form_validators_mixin.dart';
+import 'layout_picked.dart';
+import 'layout_picker.dart';
 
 class AddCardScreen extends StatefulWidget
     with FormSettersMixin, FormValidatorsMixin {
@@ -57,92 +60,122 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 1.0,
-        title: isEdit ? Text('Edit Card') : Text('Add Card'),
-        actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: RaisedButton.icon(
-              icon: Icon(Icons.done),
-              label: Text('Save'),
-              color: Colors.green[300],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-              onPressed: _saveCard,
-            ),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: form,
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              children: <Widget>[
-                _buildImagesPicker(),
-                SizedBox(
-                  height: 16.0,
+    return ChangeNotifierProvider<LayoutPicked>(
+      builder: (context) => LayoutPicked(),
+      child: Builder(
+        builder: (context) => Scaffold(
+          appBar: AppBar(
+            elevation: 1.0,
+            title: isEdit ? Text('Edit Card') : Text('Add Card'),
+            actions: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: RaisedButton.icon(
+                  icon: Icon(Icons.done),
+                  label: Text('Save'),
+                  color: Colors.green[300],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  onPressed: () => _saveCard(context),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              ),
+            ],
+          ),
+          body: SingleChildScrollView(
+            child: Form(
+              key: form,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
                   children: <Widget>[
-                    _buildColorPicker(),
-                    _buildFontSizePicker(),
+                    Container(
+                      padding: const EdgeInsets.all(100.0),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.blueGrey[100]),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Text(
+                              'Layout:',
+                              style: TextStyle(
+                                color: Colors.blueGrey,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          LayoutPicker(),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 16.0,
+                    ),
+                    _buildImagesPicker(),
+                    SizedBox(
+                      height: 16.0,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        _buildColorPicker(),
+                        _buildFontSizePicker(),
+                      ],
+                    ),
+                    TextFormfieldWithPadding(
+                        initialValue: cardModel.label,
+                        label: 'Card Name',
+                        setter: widget.labelSetter,
+                        validator: widget.labelValidator,
+                        nextFocusNode: nameFN),
+                    TextFormfieldWithPadding(
+                      initialValue: cardModel.name,
+                      label: 'Your Name',
+                      setter: widget.nameSetter,
+                      validator: widget.nameValidator,
+                      focusNode: nameFN,
+                      nextFocusNode: professionFN,
+                    ),
+                    TextFormfieldWithPadding(
+                      initialValue: cardModel.profession,
+                      label: 'Profession',
+                      setter: widget.professionSetter,
+                      validator: widget.professionValidator,
+                      focusNode: professionFN,
+                      nextFocusNode: phoneFN,
+                    ),
+                    TextFormfieldWithPadding(
+                      initialValue: cardModel.phone,
+                      label: 'Phone',
+                      setter: widget.phoneSetter,
+                      inputType: TextInputType.phone,
+                      focusNode: phoneFN,
+                      nextFocusNode: emailFN,
+                    ),
+                    TextFormfieldWithPadding(
+                      initialValue: cardModel.email,
+                      label: 'E-mail',
+                      setter: widget.emailSetter,
+                      validator: widget.emailValidator,
+                      focusNode: emailFN,
+                      nextFocusNode: whatsappFN,
+                    ),
+                    TextFormfieldWithPadding(
+                      initialValue: cardModel.whatsapp,
+                      label: 'WhatsApp',
+                      setter: widget.whatsappSetter,
+                      inputType: TextInputType.phone,
+                      focusNode: whatsappFN,
+                      textInputAction: TextInputAction.done,
+                      onFieldSubmitted: () => _saveCard(context),
+                    ),
                   ],
                 ),
-                TextFormfieldWithPadding(
-                  initialValue: cardModel.label,
-                  label: 'Card Name',
-                  setter: widget.labelSetter,
-                  validator: widget.labelValidator,
-                  nextFocusNode: nameFN
-                ),
-                TextFormfieldWithPadding(
-                  initialValue: cardModel.name,
-                  label: 'Your Name',
-                  setter: widget.nameSetter,
-                  validator: widget.nameValidator,
-                  focusNode: nameFN,
-                  nextFocusNode: professionFN,
-                ),
-                TextFormfieldWithPadding(
-                  initialValue: cardModel.profession,
-                  label: 'Profession',
-                  setter: widget.professionSetter,
-                  validator: widget.professionValidator,
-                  focusNode: professionFN,
-                  nextFocusNode: phoneFN,
-                ),
-                TextFormfieldWithPadding(
-                  initialValue: cardModel.phone,
-                  label: 'Phone',
-                  setter: widget.phoneSetter,
-                  inputType: TextInputType.phone,
-                  focusNode: phoneFN,
-                  nextFocusNode: emailFN,
-                ),
-                TextFormfieldWithPadding(
-                  initialValue: cardModel.email,
-                  label: 'E-mail',
-                  setter: widget.emailSetter,
-                  validator: widget.emailValidator,
-                  focusNode: emailFN,
-                  nextFocusNode: whatsappFN,
-                ),
-                TextFormfieldWithPadding(
-                  initialValue: cardModel.whatsapp,
-                  label: 'WhatsApp',
-                  setter: widget.whatsappSetter,
-                  inputType: TextInputType.phone,
-                  focusNode: whatsappFN,
-                  textInputAction: TextInputAction.done,
-                  onFieldSubmitted: _saveCard,
-                ),
-              ],
+              ),
             ),
           ),
         ),
@@ -232,6 +265,8 @@ class _AddCardScreenState extends State<AddCardScreen> {
   Widget _buildImagesPicker() {
     return Wrap(
       spacing: 12.0,
+      runSpacing: 12.0,
+      alignment: WrapAlignment.center,
       children: <Widget>[
         Container(
           padding: const EdgeInsets.all(8.0),
@@ -313,7 +348,9 @@ class _AddCardScreenState extends State<AddCardScreen> {
     }
   }
 
-  void _saveCard() async {
+  void _saveCard(BuildContext context) async {
+    final provider = Provider.of<LayoutPicked>(context);
+    print(provider.getLayout());
     FormState formState = form.currentState;
     if (formState.validate()) {
       formState.save();

@@ -31,15 +31,16 @@ class MCUiUtils {
       );
   }
 
-  static void showSimpleDialog(
+  static Future<dynamic> showSimpleDialog(
       {BuildContext context, Widget title, List<Widget> children}) {
-    showDialog(
+    dynamic response = showDialog(
       context: context,
       builder: (context) => SimpleDialog(
         title: title,
         children: children,
       ),
     );
+    return response;
   }
 
   static void showColorPicker(
