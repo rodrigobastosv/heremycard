@@ -8,6 +8,7 @@ class CardModel {
   String name;
   String profession;
   String profileImagePath;
+  String brandImagePath;
   String backgroundImagePath;
   String phone;
   String email;
@@ -22,6 +23,7 @@ class CardModel {
       ..name = json[NAME]
       ..profession = json[PROFESSION]
       ..profileImagePath = json[PROFILE_IMAGE_PATH]
+      ..brandImagePath = json[BRAND_IMAGE_PATH]
       ..backgroundImagePath = json[BACKGROUND_IMAGE_PATH]
       ..fontColor = json[FONT_COLOR]
       ..fontSize = json[FONT_SIZE]
@@ -37,6 +39,7 @@ class CardModel {
       NAME: instance.name,
       PROFESSION: instance.profession,
       PROFILE_IMAGE_PATH: instance.profileImagePath,
+      BRAND_IMAGE_PATH: instance.brandImagePath,
       BACKGROUND_IMAGE_PATH: instance.backgroundImagePath,
       FONT_COLOR: instance.fontColor,
       FONT_SIZE: instance.fontSize,

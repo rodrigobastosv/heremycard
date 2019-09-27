@@ -4,6 +4,7 @@ const LABEL = 'label';
 const NAME = 'name';
 const PROFESSION = 'profession';
 const PROFILE_IMAGE_PATH = 'profile_image_path';
+const BRAND_IMAGE_PATH = 'brand_image_path';
 const BACKGROUND_IMAGE_PATH = 'background_image_path';
 const FONT_COLOR = 'font_color';
 const FONT_SIZE = 'font_size';
