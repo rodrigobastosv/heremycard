@@ -33,6 +33,7 @@ class CardDAO {
         SET 
           $LABEL = ?,
           $NAME = ?,
+          $LAYOUT = ?,
           $PROFESSION = ?,
           $PROFILE_IMAGE_PATH = ?,
           $BRAND_IMAGE_PATH = ?,
@@ -47,6 +48,7 @@ class CardDAO {
         [
           cardModel.label,
           cardModel.name,
+          cardModel.layout,
           cardModel.profession,
           cardModel.profileImagePath,
           cardModel.brandImagePath,

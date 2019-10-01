@@ -4,3 +4,7 @@ enum Layout {
   profileEmphasys,
   brandEmphasys
 }
+
+Layout getLayoutByIndex(int index) {
+  return Layout.values[index];
+}

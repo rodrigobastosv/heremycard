@@ -45,6 +45,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
   int pickedFontColor = 0xFF000000;
   int pickedFontSize = 18;
+  int pickedLayoutIndex = 0;
 
   bool get isEdit => cardModel.id != null;
 
@@ -57,9 +58,11 @@ class _AddCardScreenState extends State<AddCardScreen> {
       widget.setProfileImagePath(cardModel.profileImagePath);
       pickedFontColor = cardModel.fontColor;
       pickedFontSize = cardModel.fontSize;
+      pickedLayoutIndex = cardModel.layout;
     }
     widget.setFontColor(pickedFontColor);
     widget.setFontSize(pickedFontSize);
+    widget.setLayout(pickedLayoutIndex);
   }
 
   @override
@@ -90,121 +93,123 @@ class _AddCardScreenState extends State<AddCardScreen> {
             child: Form(
               key: form,
               child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      padding: const EdgeInsets.all(100.0),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blueGrey[100]),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Column(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Consumer<LayoutPicked>(
+                    builder: (context, pickedLayout, child) {
+                      print(pickedLayoutIndex);
+                      print(pickedLayout.getLayout());
+                      Layout layout = pickedLayout.getLayout() != null
+                          ? pickedLayout.getLayout()
+                          : getLayoutByIndex(pickedLayoutIndex);
+                      return Column(
                         children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Text(
-                              'Layout:',
-                              style: TextStyle(
-                                color: Colors.blueGrey,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w500,
-                              ),
+                          Container(
+                            padding: const EdgeInsets.all(100.0),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.blueGrey[100]),
+                              borderRadius: BorderRadius.circular(10.0),
                             ),
-                          ),
-                          LayoutPicker(),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 16.0,
-                    ),
-                    Consumer<LayoutPicked>(
-                      builder: (context, pickedLayout, child) {
-                        Layout layout = pickedLayout.getLayout();
-                        return Column(
-                          children: <Widget>[
-                            _buildImagesPicker(layout),
-                            SizedBox(
-                              height: 16.0,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            child: Column(
                               children: <Widget>[
-                                layoutAcceptField(layout, MCFormField.fontColor)
-                                    ? _buildColorPicker()
-                                    : Container(),
-                                layoutAcceptField(layout, MCFormField.fontSize)
-                                    ? _buildFontSizePicker()
-                                    : Container(),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 8.0),
+                                  child: Text(
+                                    'Layout:',
+                                    style: TextStyle(
+                                      color: Colors.blueGrey,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                LayoutPicker(
+                                  layout: layout,
+                                ),
                               ],
                             ),
-                            layoutAcceptField(layout, MCFormField.cardName)
-                                ? TextFormfieldWithPadding(
-                                    initialValue: cardModel.label,
-                                    label: 'Card Name',
-                                    setter: widget.labelSetter,
-                                    validator: widget.labelValidator,
-                                    nextFocusNode: nameFN)
-                                : Container(),
-                            layoutAcceptField(layout, MCFormField.name)
-                                ? TextFormfieldWithPadding(
-                                    initialValue: cardModel.name,
-                                    label: 'Your Name',
-                                    setter: widget.nameSetter,
-                                    validator: widget.nameValidator,
-                                    focusNode: nameFN,
-                                    nextFocusNode: professionFN,
-                                  )
-                                : Container(),
-                            layoutAcceptField(layout, MCFormField.profession)
-                                ? TextFormfieldWithPadding(
-                                    initialValue: cardModel.profession,
-                                    label: 'Profession',
-                                    setter: widget.professionSetter,
-                                    validator: widget.professionValidator,
-                                    focusNode: professionFN,
-                                    nextFocusNode: phoneFN,
-                                  )
-                                : Container(),
-                            layoutAcceptField(layout, MCFormField.phone)
-                                ? TextFormfieldWithPadding(
-                                    initialValue: cardModel.phone,
-                                    label: 'Phone',
-                                    setter: widget.phoneSetter,
-                                    inputType: TextInputType.phone,
-                                    focusNode: phoneFN,
-                                    nextFocusNode: emailFN,
-                                  )
-                                : Container(),
-                            layoutAcceptField(layout, MCFormField.email)
-                                ? TextFormfieldWithPadding(
-                                    initialValue: cardModel.email,
-                                    label: 'E-mail',
-                                    setter: widget.emailSetter,
-                                    validator: widget.emailValidator,
-                                    focusNode: emailFN,
-                                    nextFocusNode: whatsappFN,
-                                  )
-                                : Container(),
-                            layoutAcceptField(layout, MCFormField.whatsapp)
-                                ? TextFormfieldWithPadding(
-                                    initialValue: cardModel.whatsapp,
-                                    label: 'WhatsApp',
-                                    setter: widget.whatsappSetter,
-                                    inputType: TextInputType.phone,
-                                    focusNode: whatsappFN,
-                                    textInputAction: TextInputAction.done,
-                                    onFieldSubmitted: () => _saveCard(context),
-                                  )
-                                : Container(),
-                          ],
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
+                          ),
+                          SizedBox(
+                            height: 16.0,
+                          ),
+                          _buildImagesPicker(layout),
+                          SizedBox(
+                            height: 16.0,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              layoutAcceptField(layout, MCFormField.fontColor)
+                                  ? _buildColorPicker()
+                                  : Container(),
+                              layoutAcceptField(layout, MCFormField.fontSize)
+                                  ? _buildFontSizePicker()
+                                  : Container(),
+                            ],
+                          ),
+                          layoutAcceptField(layout, MCFormField.cardName)
+                              ? TextFormfieldWithPadding(
+                                  initialValue: cardModel.label,
+                                  label: 'Card Name',
+                                  setter: widget.labelSetter,
+                                  validator: widget.labelValidator,
+                                  nextFocusNode: nameFN)
+                              : Container(),
+                          layoutAcceptField(layout, MCFormField.name)
+                              ? TextFormfieldWithPadding(
+                                  initialValue: cardModel.name,
+                                  label: 'Your Name',
+                                  setter: widget.nameSetter,
+                                  validator: widget.nameValidator,
+                                  focusNode: nameFN,
+                                  nextFocusNode: professionFN,
+                                )
+                              : Container(),
+                          layoutAcceptField(layout, MCFormField.profession)
+                              ? TextFormfieldWithPadding(
+                                  initialValue: cardModel.profession,
+                                  label: 'Profession',
+                                  setter: widget.professionSetter,
+                                  validator: widget.professionValidator,
+                                  focusNode: professionFN,
+                                  nextFocusNode: phoneFN,
+                                )
+                              : Container(),
+                          layoutAcceptField(layout, MCFormField.phone)
+                              ? TextFormfieldWithPadding(
+                                  initialValue: cardModel.phone,
+                                  label: 'Phone',
+                                  setter: widget.phoneSetter,
+                                  inputType: TextInputType.phone,
+                                  focusNode: phoneFN,
+                                  nextFocusNode: emailFN,
+                                )
+                              : Container(),
+                          layoutAcceptField(layout, MCFormField.email)
+                              ? TextFormfieldWithPadding(
+                                  initialValue: cardModel.email,
+                                  label: 'E-mail',
+                                  setter: widget.emailSetter,
+                                  validator: widget.emailValidator,
+                                  inputType: TextInputType.emailAddress,
+                                  focusNode: emailFN,
+                                  nextFocusNode: whatsappFN,
+                                )
+                              : Container(),
+                          layoutAcceptField(layout, MCFormField.whatsapp)
+                              ? TextFormfieldWithPadding(
+                                  initialValue: cardModel.whatsapp,
+                                  label: 'WhatsApp',
+                                  setter: widget.whatsappSetter,
+                                  inputType: TextInputType.phone,
+                                  focusNode: whatsappFN,
+                                  textInputAction: TextInputAction.done,
+                                  onFieldSubmitted: () => _saveCard(context),
+                                )
+                              : Container(),
+                        ],
+                      );
+                    },
+                  )),
             ),
           ),
         ),
@@ -420,12 +425,13 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
   void _saveCard(BuildContext context) async {
     final provider = Provider.of<LayoutPicked>(context);
-    print(provider.getLayout());
+
     FormState formState = form.currentState;
     if (formState.validate()) {
       formState.save();
       widget.setFontColor(pickedFontColor);
       widget.setFontSize(pickedFontSize);
+      widget.setLayout(provider.getLayout().index);
       if (isEdit) {
         await _service.update(FormSettersMixin.cardModel);
       } else {

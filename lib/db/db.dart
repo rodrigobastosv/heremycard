@@ -35,11 +35,13 @@ class DB {
           $ID INTEGER PRIMARY KEY,
           $FONT_COLOR INTEGER,
           $FONT_SIZE INTEGER,
+          $LAYOUT INTEGER,
           $LABEL TEXT,
           $NAME TEXT,
           $PROFESSION TEXT,
           $PROFILE_IMAGE_PATH TEXT,
           $BACKGROUND_IMAGE_PATH TEXT,
+          $BRAND_IMAGE_PATH TEXT,
           $PHONE TEXT,
           $EMAIL TEXT,
           $WHATSAPP TEXT

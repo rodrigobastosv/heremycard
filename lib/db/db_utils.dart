@@ -1,6 +1,7 @@
 const CARD_TABLE = 'card';
 const ID = 'id';
 const LABEL = 'label';
+const LAYOUT = 'layout';
 const NAME = 'name';
 const PROFESSION = 'profession';
 const PROFILE_IMAGE_PATH = 'profile_image_path';

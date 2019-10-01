@@ -10,6 +10,10 @@ import 'package:provider/provider.dart';
 import 'layout_picked.dart';
 
 class LayoutPicker extends StatefulWidget {
+  LayoutPicker({this.layout});
+
+  final Layout layout;
+
   @override
   _LayoutPickerState createState() => _LayoutPickerState();
 }
@@ -45,37 +49,45 @@ class _LayoutPickerState extends State<LayoutPicker> {
       },
       child: Consumer<LayoutPicked>(
         builder: (context, layoutPicked, child) {
-          switch(layoutPicked.getLayout()) {
-            case Layout.basicWithProfile:
-              return Container(
-                width: 300.0,
-                height: 150.0,
-                child: BasicWithProfileLayout(),
-              );
-            case Layout.basicWithProfileAndBrand:
-              return Container(
-                width: 300.0,
-                height: 150.0,
-                child: BasicWithProfileAndBrandLayout(),
-              );
-            case Layout.profileEmphasys:
-              return Container(
-                width: 300.0,
-                height: 150.0,
-                child: ProfileEmphasysLayout(),
-              );
-            case Layout.brandEmphasys:
-              return Container(
-                width: 300.0,
-                height: 150.0,
-                child: BrandEmphasysLayout(),
-              );
-            default:
-              return Text('Choose bitch!');
-          }
+          return getLayoutContainer(widget.layout != null ? widget.layout : layoutPicked.getLayout());
         },
       ),
     );
+  }
+
+  Widget getLayoutContainer(Layout layout) {
+    switch(layout) {
+      case Layout.basicWithProfile:
+        return Container(
+          width: 300.0,
+          height: 150.0,
+          child: BasicWithProfileLayout(),
+        );
+      case Layout.basicWithProfileAndBrand:
+        return Container(
+          width: 300.0,
+          height: 150.0,
+          child: BasicWithProfileAndBrandLayout(),
+        );
+      case Layout.profileEmphasys:
+        return Container(
+          width: 300.0,
+          height: 150.0,
+          child: ProfileEmphasysLayout(),
+        );
+      case Layout.brandEmphasys:
+        return Container(
+          width: 300.0,
+          height: 150.0,
+          child: BrandEmphasysLayout(),
+        );
+      default:
+        return Container(
+          width: 300.0,
+          height: 150.0,
+          child: BasicWithProfileLayout(),
+        );
+    }
   }
 
   void _pickLayoutAndNavigateBack(BuildContext context, Layout layout) {
