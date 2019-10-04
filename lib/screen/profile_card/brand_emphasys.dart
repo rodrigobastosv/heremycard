@@ -10,6 +10,6 @@ class BrandEmphasys extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return null;
+    return Container();
   }
 }

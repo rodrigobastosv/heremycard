@@ -87,6 +87,7 @@ class _ProfileCardScreenState extends State<ProfileCardScreen> {
   Widget _buildLayout() {
     Layout layout = getLayoutByIndex(card.layout);
 
+    print(layout);
     switch (layout) {
       case Layout.basicWithProfile:
         return BasicWithProfile(card: card);
