@@ -21,7 +21,6 @@ class LayoutPicker extends StatefulWidget {
 class _LayoutPickerState extends State<LayoutPicker> {
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       onTap: () {
         MCUiUtils.showSimpleDialog(
@@ -29,64 +28,70 @@ class _LayoutPickerState extends State<LayoutPicker> {
           context: context,
           children: <Widget>[
             GestureDetector(
-            onTap: () =>_pickLayoutAndNavigateBack(context, Layout.basicWithProfile),
-              child: BasicWithProfileLayout(),
+              onTap: () => _pickLayoutAndNavigateBack(
+                context,
+                Layout.basicWithProfile,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0,),
+                child: BasicWithProfileLayout(),
+              ),
             ),
             GestureDetector(
-              onTap: () =>_pickLayoutAndNavigateBack(context, Layout.basicWithProfileAndBrand),
-              child: BasicWithProfileAndBrandLayout(),
+              onTap: () => _pickLayoutAndNavigateBack(
+                context,
+                Layout.basicWithProfileAndBrand,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0,),
+                child: BasicWithProfileAndBrandLayout(),
+              ),
             ),
             GestureDetector(
-              onTap: () =>_pickLayoutAndNavigateBack(context, Layout.profileEmphasys),
-              child: ProfileEmphasysLayout(),
+              onTap: () => _pickLayoutAndNavigateBack(
+                context,
+                Layout.profileEmphasys,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0,),
+                child: ProfileEmphasysLayout(),
+              ),
             ),
             GestureDetector(
-              onTap: () =>_pickLayoutAndNavigateBack(context, Layout.brandEmphasys),
-              child: BrandEmphasysLayout(),
+              onTap: () => _pickLayoutAndNavigateBack(
+                context,
+                Layout.brandEmphasys,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0,),
+                child: BrandEmphasysLayout(),
+              ),
             ),
           ],
         );
       },
       child: Consumer<LayoutPicked>(
         builder: (context, layoutPicked, child) {
-          return getLayoutContainer(widget.layout != null ? widget.layout : layoutPicked.getLayout());
+          return getLayoutContainer(
+            widget.layout != null ? widget.layout : layoutPicked.getLayout(),
+          );
         },
       ),
     );
   }
 
   Widget getLayoutContainer(Layout layout) {
-    switch(layout) {
+    switch (layout) {
       case Layout.basicWithProfile:
-        return Container(
-          width: 300.0,
-          height: 150.0,
-          child: BasicWithProfileLayout(),
-        );
+        return BasicWithProfileLayout();
       case Layout.basicWithProfileAndBrand:
-        return Container(
-          width: 300.0,
-          height: 150.0,
-          child: BasicWithProfileAndBrandLayout(),
-        );
+        return BasicWithProfileAndBrandLayout();
       case Layout.profileEmphasys:
-        return Container(
-          width: 300.0,
-          height: 150.0,
-          child: ProfileEmphasysLayout(),
-        );
+        return ProfileEmphasysLayout();
       case Layout.brandEmphasys:
-        return Container(
-          width: 300.0,
-          height: 150.0,
-          child: BrandEmphasysLayout(),
-        );
+        return BrandEmphasysLayout();
       default:
-        return Container(
-          width: 300.0,
-          height: 150.0,
-          child: BasicWithProfileLayout(),
-        );
+        return BasicWithProfileLayout();
     }
   }
 

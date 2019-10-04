@@ -5,107 +5,87 @@ class ProfileEmphasysLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(15.0),
-      padding: EdgeInsets.all(20.0),
+      width: 210.0,
+      height: 100.0,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.blueGrey[100]),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(10.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey,
+            blurRadius: 1,
+            offset: Offset(0, 1),
+          ),
+        ],
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Expanded(
-              child: Column(
+          Icon(
+            Icons.person,
+            size: 48.0,
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Icon(Icons.person, size: 48.0,),
+              Container(
+                width: 50.0,
+                height: 6.0,
+                color: Colors.grey[600],
+              ),
+              SizedBox(height: 4.0),
+              Container(
+                width: 30.0,
+                height: 6.0,
+                color: Colors.grey[400],
+              ),
+              SizedBox(height: 8.0),
+              Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.email,
+                    size: 16.0,
+                  ),
+                  SizedBox(width: 6.0),
+                  Container(
+                    width: 30.0,
+                    height: 6.0,
+                    color: Colors.grey[400],
+                  ),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.phone,
+                    size: 16.0,
+                  ),
+                  SizedBox(width: 6.0),
+                  Container(
+                    width: 30.0,
+                    height: 6.0,
+                    color: Colors.grey[400],
+                  ),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Icon(
+                    MdiIcons.whatsapp,
+                    size: 16.0,
+                  ),
+                  SizedBox(width: 6.0),
+                  Container(
+                    width: 30.0,
+                    height: 6.0,
+                    color: Colors.grey[400],
+                  ),
+                ],
+              ),
             ],
-          ),),
-          Expanded(
-              child: Padding(
-            padding: const EdgeInsets.only(left: 14.0),
-            child: Column(
-              children: <Widget>[
-                Container(
-                  width: 50.0,
-                  height: 10.0,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blueGrey[100]),
-                    color: Colors.grey[700],
-                  ),
-                ),
-                SizedBox(
-                  height: 4.0,
-                ),
-                Container(
-                  width: 30.0,
-                  height: 10.0,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blueGrey[100]),
-                    color: Colors.grey[300],
-                  ),
-                ),
-                SizedBox(
-                  height: 12.0,
-                ),
-                Row(
-                  children: <Widget>[
-                    Icon(
-                      Icons.email,
-                      size: 12.0,
-                    ),
-                    SizedBox(
-                      width: 6.0,
-                    ),
-                    Container(
-                      width: 30.0,
-                      height: 6.0,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blueGrey[100]),
-                        color: Colors.grey[300],
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Icon(
-                      Icons.phone,
-                      size: 12.0,
-                    ),
-                    SizedBox(
-                      width: 6.0,
-                    ),
-                    Container(
-                      width: 30.0,
-                      height: 6.0,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blueGrey[100]),
-                        color: Colors.grey[300],
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Icon(
-                      MdiIcons.whatsapp,
-                      size: 12.0,
-                    ),
-                    SizedBox(
-                      width: 6.0,
-                    ),
-                    Container(
-                      width: 30.0,
-                      height: 6.0,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blueGrey[100]),
-                        color: Colors.grey[300],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          )),
+          ),
         ],
       ),
     );

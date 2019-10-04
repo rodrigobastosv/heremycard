@@ -96,15 +96,13 @@ class _AddCardScreenState extends State<AddCardScreen> {
                   padding: const EdgeInsets.all(12.0),
                   child: Consumer<LayoutPicked>(
                     builder: (context, pickedLayout, child) {
-                      print(pickedLayoutIndex);
-                      print(pickedLayout.getLayout());
                       Layout layout = pickedLayout.getLayout() != null
                           ? pickedLayout.getLayout()
                           : getLayoutByIndex(pickedLayoutIndex);
                       return Column(
                         children: <Widget>[
                           Container(
-                            padding: const EdgeInsets.all(100.0),
+                            padding: const EdgeInsets.all(8.0),
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.blueGrey[100]),
                               borderRadius: BorderRadius.circular(10.0),
@@ -128,15 +126,12 @@ class _AddCardScreenState extends State<AddCardScreen> {
                               ],
                             ),
                           ),
-                          SizedBox(
-                            height: 16.0,
-                          ),
+                          SizedBox(height: 16.0),
                           _buildImagesPicker(layout),
-                          SizedBox(
-                            height: 16.0,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          SizedBox(height: 16.0),
+                          Wrap(
+                            spacing: 16.0,
+                            runSpacing: 16.0,
                             children: <Widget>[
                               layoutAcceptField(layout, MCFormField.fontColor)
                                   ? _buildColorPicker()
@@ -146,6 +141,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
                                   : Container(),
                             ],
                           ),
+                          SizedBox(height: 16.0),
                           layoutAcceptField(layout, MCFormField.cardName)
                               ? TextFormfieldWithPadding(
                                   initialValue: cardModel.label,
@@ -257,6 +253,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
   Widget _buildFontSizePicker() {
     return Container(
+      width: 200.0,
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.blueGrey[100]),
@@ -265,18 +262,20 @@ class _AddCardScreenState extends State<AddCardScreen> {
       child: Column(
         children: <Widget>[
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
                 'Font Size: ',
                 style: TextStyle(
                   color: Colors.blueGrey,
+                  fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               Text(
                 pickedFontSize.toString(),
                 style: TextStyle(
-                  color: Colors.blueGrey,
+                  color: Colors.black,
                   fontSize: pickedFontSize.toDouble(),
                   fontWeight: FontWeight.w500,
                 ),
@@ -297,99 +296,100 @@ class _AddCardScreenState extends State<AddCardScreen> {
   }
 
   Widget _buildImagesPicker(Layout layout) {
-    return Wrap(
-      spacing: 12.0,
-      runSpacing: 12.0,
-      alignment: WrapAlignment.center,
-      children: <Widget>[
-        if (layoutAcceptField(layout, MCFormField.profilePhoto))
-          Container(
-            padding: const EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.blueGrey[100]),
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Text(
-                    'Profile:',
-                    style: TextStyle(
-                      color: Colors.blueGrey,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w500,
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Wrap(
+        spacing: 12.0,
+        children: <Widget>[
+          if (layoutAcceptField(layout, MCFormField.profilePhoto))
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.blueGrey[100]),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(
+                      'Profile:',
+                      style: TextStyle(
+                        color: Colors.blueGrey,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
-                ),
-                CardImagePicker(
-                  imagePath: cardModel.profileImagePath,
-                  pickedImage: _pickedProfileImage,
-                  onPickImage: _pickProfileImage,
-                  defaultAssetPath: 'assets/person.jpeg',
-                ),
-              ],
+                  CardImagePicker(
+                    imagePath: cardModel.profileImagePath,
+                    pickedImage: _pickedProfileImage,
+                    onPickImage: _pickProfileImage,
+                    defaultAssetPath: 'assets/person.jpeg',
+                  ),
+                ],
+              ),
             ),
-          ),
-        if (layoutAcceptField(layout, MCFormField.brand))
-          Container(
-            padding: const EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.blueGrey[100]),
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Text(
-                    'Brand:',
-                    style: TextStyle(
-                      color: Colors.blueGrey,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w500,
+          if (layoutAcceptField(layout, MCFormField.brand))
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.blueGrey[100]),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(
+                      'Brand:',
+                      style: TextStyle(
+                        color: Colors.blueGrey,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
-                ),
-                CardImagePicker(
-                  imagePath: cardModel.brandImagePath,
-                  pickedImage: _pickedBrandImage,
-                  onPickImage: _pickBrandImage,
-                  defaultAssetPath: 'assets/brand.jpg',
-                ),
-              ],
+                  CardImagePicker(
+                    imagePath: cardModel.brandImagePath,
+                    pickedImage: _pickedBrandImage,
+                    onPickImage: _pickBrandImage,
+                    defaultAssetPath: 'assets/brand.jpg',
+                  ),
+                ],
+              ),
             ),
-          ),
-        if (layoutAcceptField(layout, MCFormField.backgroundImage))
-          Container(
-            padding: const EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.blueGrey[100]),
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Text(
-                    'Background:',
-                    style: TextStyle(
-                      color: Colors.blueGrey,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w500,
+          if (layoutAcceptField(layout, MCFormField.backgroundImage))
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.blueGrey[100]),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(
+                      'Background:',
+                      style: TextStyle(
+                        color: Colors.blueGrey,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
-                ),
-                CardImagePicker(
-                  imagePath: cardModel.backgroundImagePath,
-                  pickedImage: _pickedBackgroundImage,
-                  onPickImage: _pickBackgroundImage,
-                  defaultAssetPath: 'assets/logo.jpg',
-                ),
-              ],
+                  CardImagePicker(
+                    imagePath: cardModel.backgroundImagePath,
+                    pickedImage: _pickedBackgroundImage,
+                    onPickImage: _pickBackgroundImage,
+                    defaultAssetPath: 'assets/logo.jpg',
+                  ),
+                ],
+              ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 

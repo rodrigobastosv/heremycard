@@ -38,6 +38,7 @@ class MCUiUtils {
       builder: (context) => SimpleDialog(
         title: title,
         children: children,
+        titlePadding: const EdgeInsets.only(top: 16.0, left: 16.0),
       ),
     );
     return response;

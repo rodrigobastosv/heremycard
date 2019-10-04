@@ -5,105 +5,115 @@ class BasicWithProfileAndBrandLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(15.0),
-      padding: EdgeInsets.all(20.0),
+      width: 210.0,
+      height: 100.0,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.blueGrey[100]),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(left: 12.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Icon(Icons.work),
-                Row(
-                  children: <Widget>[
-                    Icon(Icons.person),
-                    Column(
-                      children: <Widget>[
-                        Container(
-                          width: 50.0,
-                          height: 10.0,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.blueGrey[100]),
-                            color: Colors.grey[700],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 4.0,
-                        ),
-                        Container(
-                          width: 30.0,
-                          height: 10.0,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.blueGrey[100]),
-                            color: Colors.grey[300],
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
-                )
-              ],
-            ),
-          ),
-          SizedBox(height: 10.0,),
-          Padding(
-            padding: const EdgeInsets.only(left: 10.0),
-            child: Row(
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Icon(Icons.email, size: 16.0,),
-                    SizedBox(width: 6.0,),
-                    Container(
-                      width: 30.0,
-                      height: 6.0,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blueGrey[100]),
-                        color: Colors.grey[300],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(width: 10.0,),
-                Row(
-                  children: <Widget>[
-                    Icon(Icons.phone, size: 16.0,),
-                    SizedBox(width: 6.0,),
-                    Container(
-                      width: 30.0,
-                      height: 6.0,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blueGrey[100]),
-                        color: Colors.grey[300],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(width: 10.0,),
-                Row(
-                  children: <Widget>[
-                    Icon(MdiIcons.whatsapp, size: 16.0,),
-                    SizedBox(width: 6.0,),
-                    Container(
-                      width: 30.0,
-                      height: 6.0,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blueGrey[100]),
-                        color: Colors.grey[300],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey,
+            blurRadius: 1,
+            offset: Offset(0, 1),
           ),
         ],
       ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          _buildFirstRow(),
+          SizedBox(height: 12.0),
+          _buildSecondRow(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFirstRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        Icon(
+          Icons.work,
+          size: 32.0,
+        ),
+        Row(
+          children: <Widget>[
+            Icon(
+              Icons.person,
+              size: 32.0,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  width: 50.0,
+                  height: 6.0,
+                  color: Colors.grey[600],
+                ),
+                SizedBox(height: 4.0),
+                Container(
+                  width: 30.0,
+                  height: 6.0,
+                  color: Colors.grey[400],
+                ),
+              ],
+            )
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget _buildSecondRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Icon(
+              Icons.email,
+              size: 16.0,
+            ),
+            SizedBox(width: 4.0),
+            Container(
+              width: 30.0,
+              height: 6.0,
+              color: Colors.grey[400],
+            ),
+          ],
+        ),
+        SizedBox(width: 12.0),
+        Row(
+          children: <Widget>[
+            Icon(
+              Icons.phone,
+              size: 16.0,
+            ),
+            SizedBox(width: 4.0),
+            Container(
+              width: 30.0,
+              height: 6.0,
+              color: Colors.grey[400],
+            ),
+          ],
+        ),
+        SizedBox(width: 12.0),
+        Row(
+          children: <Widget>[
+            Icon(
+              MdiIcons.whatsapp,
+              size: 16.0,
+            ),
+            SizedBox(width: 4.0),
+            Container(
+              width: 30.0,
+              height: 6.0,
+              color: Colors.grey[400],
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
