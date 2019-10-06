@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class BasicWithProfileAndBrandLayout extends StatelessWidget {
@@ -34,7 +35,7 @@ class BasicWithProfileAndBrandLayout extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         Icon(
-          Icons.work,
+          Octicons.getIconData('bookmark'),
           size: 32.0,
         ),
         Row(

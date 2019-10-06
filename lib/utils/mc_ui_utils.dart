@@ -70,4 +70,31 @@ class MCUiUtils {
       ),
     );
   }
+
+  static Widget buildInfoRow(IconData icon, String text, int fontSize, int fontColor, [Color color]) {
+    if (text == null || text.isEmpty) {
+      return Container();
+    }
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Row(
+        children: <Widget>[
+          CircleAvatar(
+            backgroundColor: color,
+            child: Icon(icon, color: Colors.white),
+          ),
+          SizedBox(
+            width: 8.0,
+          ),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: fontSize.toDouble(),
+              color: Color(fontColor),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

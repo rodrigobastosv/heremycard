@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heremycard/model/card_model.dart';
+import 'package:heremycard/utils/mc_ui_utils.dart';
 import 'package:heremycard/utils/mc_utils.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -79,41 +80,14 @@ class BasicWithProfile extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  _buildInfoRow(Icons.email, card.email, Colors.red[800]),
-                  _buildInfoRow(Icons.phone, card.phone),
-                  _buildInfoRow(MdiIcons.whatsapp, card.whatsapp, Colors.green),
+                  MCUiUtils.buildInfoRow(Icons.email, card.email, fontSize, fontColor, Colors.red[800]),
+                  MCUiUtils.buildInfoRow(Icons.phone, card.phone, fontSize, fontColor),
+                  MCUiUtils.buildInfoRow(MdiIcons.whatsapp, card.whatsapp, fontSize, fontColor, Colors.green),
                 ],
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildInfoRow(IconData icon, String text, [Color color]) {
-    if (text == null || text.isEmpty) {
-      return Container();
-    }
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Row(
-        children: <Widget>[
-          CircleAvatar(
-            backgroundColor: color,
-            child: Icon(icon, color: Colors.white),
-          ),
-          SizedBox(
-            width: 8.0,
-          ),
-          Text(
-            text,
-            style: TextStyle(
-              fontSize: fontSize.toDouble(),
-              color: Color(fontColor),
-            ),
-          ),
-        ],
       ),
     );
   }

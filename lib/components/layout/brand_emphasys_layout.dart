@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class BrandEmphasysLayout extends StatelessWidget {
@@ -23,7 +24,7 @@ class BrandEmphasysLayout extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Icon(
-            Icons.work,
+            Octicons.getIconData('bookmark'),
             size: 48.0,
           ),
           Column(

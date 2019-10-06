@@ -33,6 +33,7 @@ dependencies:
   dotted_border: ^1.0.2
   flutter_colorpicker: ^0.2.6
   provider: ^3.1.0
+  flutter_icons: ^0.3.1
 
 dev_dependencies:
   flutter_test:
