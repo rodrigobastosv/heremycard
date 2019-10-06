@@ -2,14 +2,20 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:heremycard/components/text_formfield_with_padding.dart';
+import 'package:heremycard/enum/layout.dart';
 import 'package:heremycard/model/card_model.dart';
 import 'package:heremycard/service/card_service.dart';
+import 'package:heremycard/utils/layout_utils.dart';
+import 'package:heremycard/utils/mc_form_fields.dart';
 import 'package:heremycard/utils/mc_ui_utils.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 import 'card_image_picker.dart';
 import 'form_setters_mixin.dart';
 import 'form_validators_mixin.dart';
+import 'layout_picked.dart';
+import 'layout_picker.dart';
 
 class AddCardScreen extends StatefulWidget
     with FormSettersMixin, FormValidatorsMixin {
@@ -25,6 +31,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
   _AddCardScreenState(this.cardModel);
 
   File _pickedProfileImage;
+  File _pickedBrandImage;
   File _pickedBackgroundImage;
 
   final cardModel;
@@ -38,6 +45,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
   int pickedFontColor = 0xFF000000;
   int pickedFontSize = 18;
+  int pickedLayoutIndex = 0;
 
   bool get isEdit => cardModel.id != null;
 
@@ -50,99 +58,154 @@ class _AddCardScreenState extends State<AddCardScreen> {
       widget.setProfileImagePath(cardModel.profileImagePath);
       pickedFontColor = cardModel.fontColor;
       pickedFontSize = cardModel.fontSize;
+      pickedLayoutIndex = cardModel.layout;
     }
     widget.setFontColor(pickedFontColor);
     widget.setFontSize(pickedFontSize);
+    widget.setLayout(pickedLayoutIndex);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 1.0,
-        title: isEdit ? Text('Edit Card') : Text('Add Card'),
-        actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: RaisedButton.icon(
-              icon: Icon(Icons.done),
-              label: Text('Save'),
-              color: Colors.green[300],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
+    return ChangeNotifierProvider<LayoutPicked>(
+      builder: (context) => LayoutPicked(),
+      child: Builder(
+        builder: (context) => Scaffold(
+          appBar: AppBar(
+            elevation: 1.0,
+            title: isEdit ? Text('Edit Card') : Text('Add Card'),
+            actions: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: RaisedButton.icon(
+                  icon: Icon(Icons.done),
+                  label: Text('Save'),
+                  color: Colors.green[300],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  onPressed: () => _saveCard(context),
+                ),
               ),
-              onPressed: _saveCard,
-            ),
+            ],
           ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: form,
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              children: <Widget>[
-                _buildImagesPicker(),
-                SizedBox(
-                  height: 16.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    _buildColorPicker(),
-                    _buildFontSizePicker(),
-                  ],
-                ),
-                TextFormfieldWithPadding(
-                  initialValue: cardModel.label,
-                  label: 'Card Name',
-                  setter: widget.labelSetter,
-                  validator: widget.labelValidator,
-                  nextFocusNode: nameFN
-                ),
-                TextFormfieldWithPadding(
-                  initialValue: cardModel.name,
-                  label: 'Your Name',
-                  setter: widget.nameSetter,
-                  validator: widget.nameValidator,
-                  focusNode: nameFN,
-                  nextFocusNode: professionFN,
-                ),
-                TextFormfieldWithPadding(
-                  initialValue: cardModel.profession,
-                  label: 'Profession',
-                  setter: widget.professionSetter,
-                  validator: widget.professionValidator,
-                  focusNode: professionFN,
-                  nextFocusNode: phoneFN,
-                ),
-                TextFormfieldWithPadding(
-                  initialValue: cardModel.phone,
-                  label: 'Phone',
-                  setter: widget.phoneSetter,
-                  inputType: TextInputType.phone,
-                  focusNode: phoneFN,
-                  nextFocusNode: emailFN,
-                ),
-                TextFormfieldWithPadding(
-                  initialValue: cardModel.email,
-                  label: 'E-mail',
-                  setter: widget.emailSetter,
-                  validator: widget.emailValidator,
-                  focusNode: emailFN,
-                  nextFocusNode: whatsappFN,
-                ),
-                TextFormfieldWithPadding(
-                  initialValue: cardModel.whatsapp,
-                  label: 'WhatsApp',
-                  setter: widget.whatsappSetter,
-                  inputType: TextInputType.phone,
-                  focusNode: whatsappFN,
-                  textInputAction: TextInputAction.done,
-                  onFieldSubmitted: _saveCard,
-                ),
-              ],
+          body: SingleChildScrollView(
+            child: Form(
+              key: form,
+              child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Consumer<LayoutPicked>(
+                    builder: (context, pickedLayout, child) {
+                      Layout layout = pickedLayout.getLayout() != null
+                          ? pickedLayout.getLayout()
+                          : getLayoutByIndex(pickedLayoutIndex);
+                      return Column(
+                        children: <Widget>[
+                          Container(
+                            padding: const EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.blueGrey[100]),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: Column(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 8.0),
+                                  child: Text(
+                                    'Layout:',
+                                    style: TextStyle(
+                                      color: Colors.blueGrey,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                LayoutPicker(
+                                  layout: layout,
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 16.0),
+                          _buildImagesPicker(layout),
+                          SizedBox(height: 16.0),
+                          Wrap(
+                            spacing: 16.0,
+                            runSpacing: 16.0,
+                            children: <Widget>[
+                              layoutAcceptField(layout, MCFormField.fontColor)
+                                  ? _buildColorPicker()
+                                  : Container(),
+                              layoutAcceptField(layout, MCFormField.fontSize)
+                                  ? _buildFontSizePicker()
+                                  : Container(),
+                            ],
+                          ),
+                          SizedBox(height: 16.0),
+                          layoutAcceptField(layout, MCFormField.cardName)
+                              ? TextFormfieldWithPadding(
+                                  initialValue: cardModel.label,
+                                  label: 'Card Name',
+                                  setter: widget.labelSetter,
+                                  validator: widget.labelValidator,
+                                  nextFocusNode: nameFN)
+                              : Container(),
+                          layoutAcceptField(layout, MCFormField.name)
+                              ? TextFormfieldWithPadding(
+                                  initialValue: cardModel.name,
+                                  label: 'Your Name',
+                                  setter: widget.nameSetter,
+                                  validator: widget.nameValidator,
+                                  focusNode: nameFN,
+                                  nextFocusNode: professionFN,
+                                )
+                              : Container(),
+                          layoutAcceptField(layout, MCFormField.profession)
+                              ? TextFormfieldWithPadding(
+                                  initialValue: cardModel.profession,
+                                  label: 'Profession',
+                                  setter: widget.professionSetter,
+                                  validator: widget.professionValidator,
+                                  focusNode: professionFN,
+                                  nextFocusNode: phoneFN,
+                                )
+                              : Container(),
+                          layoutAcceptField(layout, MCFormField.phone)
+                              ? TextFormfieldWithPadding(
+                                  initialValue: cardModel.phone,
+                                  label: 'Phone',
+                                  setter: widget.phoneSetter,
+                                  inputType: TextInputType.phone,
+                                  focusNode: phoneFN,
+                                  nextFocusNode: emailFN,
+                                )
+                              : Container(),
+                          layoutAcceptField(layout, MCFormField.email)
+                              ? TextFormfieldWithPadding(
+                                  initialValue: cardModel.email,
+                                  label: 'E-mail',
+                                  setter: widget.emailSetter,
+                                  validator: widget.emailValidator,
+                                  inputType: TextInputType.emailAddress,
+                                  focusNode: emailFN,
+                                  nextFocusNode: whatsappFN,
+                                )
+                              : Container(),
+                          layoutAcceptField(layout, MCFormField.whatsapp)
+                              ? TextFormfieldWithPadding(
+                                  initialValue: cardModel.whatsapp,
+                                  label: 'WhatsApp',
+                                  setter: widget.whatsappSetter,
+                                  inputType: TextInputType.phone,
+                                  focusNode: whatsappFN,
+                                  textInputAction: TextInputAction.done,
+                                  onFieldSubmitted: () => _saveCard(context),
+                                )
+                              : Container(),
+                        ],
+                      );
+                    },
+                  )),
             ),
           ),
         ),
@@ -190,6 +253,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
   Widget _buildFontSizePicker() {
     return Container(
+      width: 200.0,
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.blueGrey[100]),
@@ -198,18 +262,20 @@ class _AddCardScreenState extends State<AddCardScreen> {
       child: Column(
         children: <Widget>[
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
                 'Font Size: ',
                 style: TextStyle(
                   color: Colors.blueGrey,
+                  fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               Text(
                 pickedFontSize.toString(),
                 style: TextStyle(
-                  color: Colors.blueGrey,
+                  color: Colors.black,
                   fontSize: pickedFontSize.toDouble(),
                   fontWeight: FontWeight.w500,
                 ),
@@ -229,67 +295,101 @@ class _AddCardScreenState extends State<AddCardScreen> {
     );
   }
 
-  Widget _buildImagesPicker() {
-    return Wrap(
-      spacing: 12.0,
-      children: <Widget>[
-        Container(
-          padding: const EdgeInsets.all(8.0),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.blueGrey[100]),
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Text(
-                  'Profile:',
-                  style: TextStyle(
-                    color: Colors.blueGrey,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w500,
+  Widget _buildImagesPicker(Layout layout) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Wrap(
+        spacing: 12.0,
+        children: <Widget>[
+          if (layoutAcceptField(layout, MCFormField.profilePhoto))
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.blueGrey[100]),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(
+                      'Profile:',
+                      style: TextStyle(
+                        color: Colors.blueGrey,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              CardImagePicker(
-                imagePath: cardModel.profileImagePath,
-                pickedImage: _pickedProfileImage,
-                onPickImage: _pickProfileImage,
-                defaultAssetPath: 'assets/person.jpeg',
-              ),
-            ],
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.all(8.0),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.blueGrey[100]),
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Text(
-                  'Background:',
-                  style: TextStyle(
-                    color: Colors.blueGrey,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w500,
+                  CardImagePicker(
+                    imagePath: cardModel.profileImagePath,
+                    pickedImage: _pickedProfileImage,
+                    onPickImage: _pickProfileImage,
+                    defaultAssetPath: 'assets/person.jpeg',
                   ),
-                ),
+                ],
               ),
-              CardImagePicker(
-                imagePath: cardModel.backgroundImagePath,
-                pickedImage: _pickedBackgroundImage,
-                onPickImage: _pickBackgroundImage,
-                defaultAssetPath: 'assets/logo.jpg',
+            ),
+          if (layoutAcceptField(layout, MCFormField.brand))
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.blueGrey[100]),
+                borderRadius: BorderRadius.circular(10.0),
               ),
-            ],
-          ),
-        ),
-      ],
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(
+                      'Brand:',
+                      style: TextStyle(
+                        color: Colors.blueGrey,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  CardImagePicker(
+                    imagePath: cardModel.brandImagePath,
+                    pickedImage: _pickedBrandImage,
+                    onPickImage: _pickBrandImage,
+                    defaultAssetPath: 'assets/brand.jpg',
+                  ),
+                ],
+              ),
+            ),
+          if (layoutAcceptField(layout, MCFormField.backgroundImage))
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.blueGrey[100]),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(
+                      'Background:',
+                      style: TextStyle(
+                        color: Colors.blueGrey,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  CardImagePicker(
+                    imagePath: cardModel.backgroundImagePath,
+                    pickedImage: _pickedBackgroundImage,
+                    onPickImage: _pickBackgroundImage,
+                    defaultAssetPath: 'assets/logo.jpg',
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
     );
   }
 
@@ -299,6 +399,16 @@ class _AddCardScreenState extends State<AddCardScreen> {
       setState(() {
         _pickedProfileImage = image;
         widget.setProfileImagePath(_pickedProfileImage.path);
+      });
+    }
+  }
+
+  void _pickBrandImage(ImageSource source) async {
+    final image = await ImagePicker.pickImage(source: source);
+    if (image != null) {
+      setState(() {
+        _pickedBrandImage = image;
+        widget.setBrandImagePath(_pickedBrandImage.path);
       });
     }
   }
@@ -313,12 +423,15 @@ class _AddCardScreenState extends State<AddCardScreen> {
     }
   }
 
-  void _saveCard() async {
+  void _saveCard(BuildContext context) async {
+    final provider = Provider.of<LayoutPicked>(context);
+
     FormState formState = form.currentState;
     if (formState.validate()) {
       formState.save();
       widget.setFontColor(pickedFontColor);
       widget.setFontSize(pickedFontSize);
+      widget.setLayout(provider.getLayout().index);
       if (isEdit) {
         await _service.update(FormSettersMixin.cardModel);
       } else {

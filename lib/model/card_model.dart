@@ -4,10 +4,12 @@ class CardModel {
   int id;
   int fontColor;
   int fontSize;
+  int layout;
   String label;
   String name;
   String profession;
   String profileImagePath;
+  String brandImagePath;
   String backgroundImagePath;
   String phone;
   String email;
@@ -19,9 +21,11 @@ class CardModel {
     return CardModel()
       ..id = json[ID]
       ..label = json[NAME]
+      ..layout = json[LAYOUT]
       ..name = json[NAME]
       ..profession = json[PROFESSION]
       ..profileImagePath = json[PROFILE_IMAGE_PATH]
+      ..brandImagePath = json[BRAND_IMAGE_PATH]
       ..backgroundImagePath = json[BACKGROUND_IMAGE_PATH]
       ..fontColor = json[FONT_COLOR]
       ..fontSize = json[FONT_SIZE]
@@ -34,9 +38,11 @@ class CardModel {
     return <String, dynamic>{
       ID: instance.id,
       LABEL: instance.label,
+      LAYOUT: instance.layout,
       NAME: instance.name,
       PROFESSION: instance.profession,
       PROFILE_IMAGE_PATH: instance.profileImagePath,
+      BRAND_IMAGE_PATH: instance.brandImagePath,
       BACKGROUND_IMAGE_PATH: instance.backgroundImagePath,
       FONT_COLOR: instance.fontColor,
       FONT_SIZE: instance.fontSize,
@@ -48,6 +54,6 @@ class CardModel {
 
   @override
   String toString() {
-    return 'CardModel{id: $id, label: $label, name: $name, profession: $profession, profileImagePath: $profileImagePath, backgroundImagePath: $backgroundImagePath, fontColor: $fontColor, phone: $phone, email: $email, whatsapp: $whatsapp}';
+    return 'CardModel{id: $id, fontColor: $fontColor, fontSize: $fontSize, layout: $layout, label: $label, name: $name, profession: $profession, profileImagePath: $profileImagePath, brandImagePath: $brandImagePath, backgroundImagePath: $backgroundImagePath, phone: $phone, email: $email, whatsapp: $whatsapp}';
   }
 }

@@ -26,6 +26,8 @@ mixin FormSettersMixin {
   void setId(int id) => cardModel.id = id;
   void setFontColor(int fontColor) => cardModel.fontColor = fontColor;
   void setFontSize(int fontSize) => cardModel.fontSize = fontSize;
+  void setLayout(int layout) => cardModel.layout = layout;
   void setProfileImagePath(String profileImage) => cardModel.profileImagePath = profileImage;
+  void setBrandImagePath(String brandImage) => cardModel.brandImagePath = brandImage;
   void setBackgroundImagePath(String backgroundImage) => cardModel.backgroundImagePath = backgroundImage;
 }
