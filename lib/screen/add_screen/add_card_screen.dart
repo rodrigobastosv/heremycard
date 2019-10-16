@@ -431,7 +431,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
       formState.save();
       widget.setFontColor(pickedFontColor);
       widget.setFontSize(pickedFontSize);
-      widget.setLayout(provider.getLayout().index);
+      widget.setLayout(provider.getLayout()?.index ?? 0);
       if (isEdit) {
         await _service.update(FormSettersMixin.cardModel);
       } else {
