@@ -30,30 +30,26 @@ class BasicWithProfileAndBrand extends StatelessWidget {
       ),
       child: SafeArea(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Expanded(
-                  flex: 5,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 26),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width / 4,
-                      height: MediaQuery.of(context).size.height / 4,
-                      child: Image.file(
-                        File(card.brandImagePath),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
+                Container(
+                  width: 240.0,
+                  height: 180.0,
+                  child: MCUtils.getImageByPathOrDefault(
+                    card.brandImagePath,
+                    'assets/brand.jpg',
                   ),
                 ),
-                Expanded(
-                  flex: 4,
+                Padding(
+                  padding: const EdgeInsets.only(left: 24.0),
                   child: Row(
                     children: <Widget>[
                       Container(
-                        width: 140.0,
-                        height: 140.0,
+                        width: 100.0,
+                        height: 100.0,
                         child: Hero(
                           tag: card.id,
                           child: ClipRRect(
@@ -65,36 +61,63 @@ class BasicWithProfileAndBrand extends StatelessWidget {
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  flex: 4,
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      children: <Widget>[
-                        Text('Rodrigo Bastos Vasconcelos',
-                            style: TextStyle(
+                      Container(
+                        constraints: BoxConstraints(
+                          minWidth: 200.0,
+                          maxWidth: 260.0,
+                        ),
+                        padding: const EdgeInsets.only(left: 12.0),
+                        child: Wrap(
+                          direction: Axis.vertical,
+                          crossAxisAlignment: WrapCrossAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              card.name,
+                              style: TextStyle(
                                 color: Color(card.fontColor),
                                 fontWeight: FontWeight.bold,
-                                fontSize: card.fontSize.toDouble())),
-                        Text(card.profession,
-                            style: TextStyle(
+                                fontSize: card.fontSize.toDouble(),
+                              ),
+                            ),
+                            Text(
+                              card.profession,
+                              style: TextStyle(
                                 color: Color(card.fontColor),
-                                fontSize: (card.fontSize - 3).toDouble())),
-                      ],
-                    ),
+                                fontSize: (card.fontSize - 3).toDouble(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 24),
+            SizedBox(height: 12.0),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                MCUiUtils.buildInfoRow(Icons.email, card.email, fontSize, fontColor, Colors.red[800]),
-                MCUiUtils.buildInfoRow(Icons.phone, card.phone, fontSize, fontColor),
-                MCUiUtils.buildInfoRow(MdiIcons.whatsapp, card.whatsapp, fontSize, fontColor, Colors.green),
+                MCUiUtils.buildInfoRow(
+                  Icons.email,
+                  card.email,
+                  fontSize,
+                  fontColor,
+                  Colors.red[800],
+                ),
+                MCUiUtils.buildInfoRow(
+                  Icons.phone,
+                  card.phone,
+                  fontSize,
+                  fontColor,
+                ),
+                MCUiUtils.buildInfoRow(
+                  MdiIcons.whatsapp,
+                  card.whatsapp,
+                  fontSize,
+                  fontColor,
+                  Colors.green,
+                ),
               ],
             )
           ],

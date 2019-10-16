@@ -43,7 +43,7 @@ class BrandEmphasys extends StatelessWidget {
                         borderRadius: new BorderRadius.circular(70.0),
                         child: MCUtils.getImageByPathOrDefault(
                           card.brandImagePath,
-                          'assets/brand.jpeg',
+                          'assets/brand.jpg',
                         ),
                       ),
                     ),
@@ -55,27 +55,54 @@ class BrandEmphasys extends StatelessWidget {
               width: MediaQuery.of(context).size.width / 2,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    card.name,
-                    style: TextStyle(
-                      fontSize: fontSize.toDouble(),
-                      fontWeight: FontWeight.bold,
-                      color: Color(fontColor),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          card.name,
+                          style: TextStyle(
+                            fontSize: fontSize.toDouble() + 4.0,
+                            fontWeight: FontWeight.bold,
+                            color: Color(fontColor),
+                          ),
+                        ),
+                        SizedBox(height: 4.0),
+                        Text(
+                          card.profession,
+                          style: TextStyle(
+                            fontSize: fontSize.toDouble() - 2.0,
+                            fontWeight: FontWeight.w500,
+                            color: Color(fontColor),
+                          ),
+                        ),
+                        Divider(height: 24.0, color: Color(fontColor)),
+                      ],
                     ),
                   ),
-                  SizedBox(height: 4.0),
-                  Text(
-                    card.profession,
-                    style: TextStyle(
-                      fontSize: fontSize.toDouble() - 6.0,
-                      fontWeight: FontWeight.w500,
-                      color: Color(fontColor),
-                    ),
+                  MCUiUtils.buildInfoRow(
+                    Icons.email,
+                    card.email,
+                    fontSize,
+                    fontColor,
+                    Colors.red[800],
                   ),
-                  MCUiUtils.buildInfoRow(Icons.email, card.email, fontSize, fontColor, Colors.red[800]),
-                  MCUiUtils.buildInfoRow(Icons.phone, card.phone, fontSize, fontColor, ),
-                  MCUiUtils.buildInfoRow(MdiIcons.whatsapp, card.whatsapp, fontSize, fontColor, Colors.green),
+                  MCUiUtils.buildInfoRow(
+                    Icons.phone,
+                    card.phone,
+                    fontSize,
+                    fontColor,
+                  ),
+                  MCUiUtils.buildInfoRow(
+                    MdiIcons.whatsapp,
+                    card.whatsapp,
+                    fontSize,
+                    fontColor,
+                    Colors.green,
+                  ),
                 ],
               ),
             ),
